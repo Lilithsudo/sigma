@@ -1,48 +1,27 @@
 trigger:
 - master
 
-variables:
-  - name: JAVA_HOME_11_X64
-    value: /usr/lib/jvm/java-11-openjdk-amd64
+pool:
+  name: MyAgentPool
 
-stages:
-- stage: Build
-  jobs:
-  - job: MavenBuild
-    displayName: Compilation maven
-    continueOnError: false
-    pool:
-      name: MyAgentPool
-    steps:
-    - task: Maven@3
-      displayName: 'Build shopfront'
-      inputs:
-        mavenPomFile: 'shopfront/pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
+jobs:
+- job: Build
+  displayName: 'Build Job'
+  steps:
+  - checkout: self
+  - script: echo "Début de la construction du projet..."
+    displayName: 'Étape de démarrage'
 
-    - task: Maven@3
-      displayName: 'Build productcatalogue'
-      inputs:
-        mavenPomFile: 'productcatalogue/pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
+  - task: Maven@3
+    displayName: 'Build avec Maven'
+    inputs:
+      mavenPomFile: 'pom.xml' # Mettez à jour ce chemin vers le fichier POM de votre projet
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      goals: 'package'
 
-    - task: Maven@3
-      displayName: 'Build stockmanager'
-      inputs:
-        mavenPomFile: 'stockmanager/pom.xml'
-        mavenOptions: '-Xmx3072m'
-        javaHomeOption: 'JDKVersion'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'package'
+  - script: echo "Construction terminée."
+    displayName: 'Étape de fin'
+
