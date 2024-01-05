@@ -1,23 +1,17 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
 - master
 
 pool: MyAgentPool
-
-
 
 steps:
 - task: Maven@3
   inputs:
     mavenPomFile: 'productcatalogue/pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
+    javaHomeOption: 'JDKVersion' # Indique que vous spécifiez une version du JDK
+    jdkVersionOption: '1.8' # Spécifie la version du JDK
     jdkArchitectureOption: 'x64'
+    javaHome: '/usr/lib/jvm/java-1.8.0-openjdk-amd64' # Ajoutez cette ligne
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
