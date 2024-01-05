@@ -4,14 +4,18 @@ trigger:
 pool: MyAgentPool
 
 steps:
+- script: |
+    echo "Setting JAVA_HOME"
+    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+  displayName: 'Set JAVA_HOME'
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'productcatalogue/pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion' # Indique que vous spécifiez une version du JDK
-    jdkVersionOption: '1.8' # Spécifie la version du JDK
+    # javaHomeOption et javaHome sont supprimés
     jdkArchitectureOption: 'x64'
-    javaHome: '/usr/lib/jvm/java-1.8.0-openjdk-amd64' # Ajoutez cette ligne
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
